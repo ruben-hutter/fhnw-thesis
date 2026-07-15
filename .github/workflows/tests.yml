@@ -1,0 +1,36 @@
+name: Tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  compile:
+    name: Compile template
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*
+
+      - name: Setup typst
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: "0.13"
+
+      - name: Compile example thesis
+        run: typst compile src/template/thesis.typ thesis.pdf
+
+      - name: Build docs
+        run: |
+          typst compile docs/manual.typ docs/manual.pdf
+          typst compile docs/thumbnail.typ src/assets/thumbnail.png --ppi 144 --pages 1
+
+      - name: Upload thesis PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-pdf
+          path: thesis.pdf

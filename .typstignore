@@ -1,0 +1,9 @@
+# Files excluded when publishing to the Typst Universe package registry.
+# Patterns match from the root; `*` also matches directory separators.
+
+.github
+scripts
+tests
+Justfile
+docs/*
+!docs/*.pdf

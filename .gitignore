@@ -1,0 +1,21 @@
+# Typst build artifacts
+*.pdf
+!src/template/thesis.pdf
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+target/
+dist/
+build/
+
+# Dependencies
+node_modules/
+venv/
+env/
