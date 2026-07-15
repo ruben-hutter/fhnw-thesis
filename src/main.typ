@@ -86,7 +86,7 @@
   logo: auto,                       // auto | none | path-string | image-element
   swiss-universities-logo: auto,    // auto | none | path-string | image-element
   logo-width: 6.5cm,
-  swiss-universities-height: 0.7cm,
+  swiss-universities-height: 0.55cm,
 
   // --- Compilation modes ---
   draft: true,                      // render TODO markers
