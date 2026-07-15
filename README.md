@@ -74,8 +74,8 @@ typst init @preview/fhnw-thesis:0.1.0
   supervisor: "Prof. Dr. Jane Doe",          // Betreuender Dozent
   expert: "Prof. Dr. John Smith",            // Experte
   thesis-type: "Bachelor Thesis",            // or "Master Thesis", etc.
-  school: "School of Engineering",           // Hochschule für Technik
-  institute: "Institute of Computer Science",
+  school: "School of Computer Science",       // Hochschule für Informatik
+  institute: "Institute of Mobile and Distributed Systems",
   location: "Brugg-Windisch, Switzerland",
   date: datetime.today(),
   language: "en",                            // "en" or "de"

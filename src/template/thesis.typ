@@ -21,8 +21,8 @@
 
   thesis-type: "Bachelor Thesis",
   university: "University of Applied Sciences and Arts Northwestern Switzerland",
-  school: "School of Engineering",
-  institute: "Institute of Computer Science",
+  school: "School of Computer Science",
+  institute: "Institute of Mobile and Distributed Systems",
   location: "Brugg-Windisch, Switzerland",
   date: datetime.today(),
   language: "en",
@@ -36,7 +36,8 @@
 
   acknowledgments: [
     I would like to thank my supervisor for their guidance throughout this
-    project, as well as the Institute of Computer Science at FHNW for providing
+    project, as well as the Institute of Mobile and Distributed Systems at FHNW
+    for providing
     the resources that made this work possible.
   ],
 
