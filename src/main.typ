@@ -85,15 +85,16 @@
   // --- Logos ---
   logo: auto,                       // auto | none | path-string | image-element
   swiss-universities-logo: auto,    // auto | none | path-string | image-element
-  logo-width: 6.5cm,
-  swiss-universities-height: 0.55cm,
+  logo-width: 7.5cm,
+  swiss-universities-height: 0.45cm,
 
   // --- Compilation modes ---
-  draft: true,                      // render TODO markers
+  draft: false,                     // render TODO markers + draft badge (opt-in; demo enables it explicitly)
   colored: true,                    // use colors for environments
 
   // --- Content ---
   abstract: [],
+  abstract-title: none,        // override front-matter heading (e.g. "Executive Summary"); none = language default
   acknowledgments: none,
   chapters: (),
   appendices: (),
@@ -230,6 +231,26 @@
 
   show link: it => text(fill: fhnw-teal, it)
 
+  // Collect optional title-page lines up front so each block can be rendered
+  // (and spaced) only when it actually has content. This keeps the layout
+  // clean when subtitle / supervisor / expert / institute fields are omitted.
+  let institute-lines = ()
+  if school != "" { institute-lines.push(school) }
+  if institute != "" { institute-lines.push(institute) }
+  if university != "" { institute-lines.push(university) }
+
+  let supervision-lines = ()
+  if supervisor != "" {
+    supervision-lines.push(
+      text(weight: "bold", fill: fhnw-gray)[#l.supervisor:] + h(0.4em) + [#supervisor]
+    )
+  }
+  if expert != "" {
+    supervision-lines.push(
+      text(weight: "bold", fill: fhnw-gray)[#l.expert:] + h(0.4em) + [#expert]
+    )
+  }
+
   // ========================================================================
   // TITLE PAGE
   // ========================================================================
@@ -270,20 +291,32 @@
 
     // Title page body
     #pad(x: 3cm, y: 1.5cm)[
+      // --- Top group: thesis type, title, optional subtitle ---
       #v(1.6cm)
 
       #text(size: 11pt, tracking: 3pt, fill: fhnw-gray)[#upper(thesis-type)]
 
-      #v(0.9cm)
+      #v(1.2cm)
 
-      #text(size: 28pt, font: sans-font, weight: "bold", fill: fhnw-dark-gray)[#title]
-
-      #if subtitle != none [
-        #v(0.5cm)
-        #text(size: 15pt, font: sans-font, fill: fhnw-gray)[#subtitle]
+      #block(spacing: 0pt)[
+        #set par(leading: 0.55em)
+        #text(size: 28pt, font: sans-font, weight: "bold", fill: fhnw-dark-gray)[#title]
       ]
 
-      #v(3cm)
+      #if subtitle != none [
+        #v(0.4cm)
+        #block(spacing: 0pt)[
+          #set par(leading: 0.6em)
+          #text(size: 15pt, font: sans-font, fill: fhnw-gray)[#subtitle]
+        ]
+      ]
+
+      // Flexible gap: absorbs all remaining vertical space and pushes the
+      // block below to the bottom of the page. It is inherently page-relative,
+      // so the layout adapts to whichever optional fields are present.
+      #v(1fr)
+
+      // --- Bottom group: author, institute, supervision, location/date ---
 
       // Author block
       #block[
@@ -298,30 +331,26 @@
         ]
       ]
 
-      #v(1fr)
-
-      // Institutional block
-      #block[
-        #text(size: 11pt, fill: fhnw-dark-gray)[
-          #school \
-          #institute \
-          #university \
+      // Institutional block (only if any institutional info is provided)
+      #if institute-lines.len() > 0 [
+        #v(1cm)
+        #block[
+          #set par(leading: 0.55em)
+          #text(size: 11pt, fill: fhnw-dark-gray)[#institute-lines.join(linebreak())]
         ]
       ]
 
-      #v(1.2cm)
-
-      // Supervision block
-      #block[
-        #text(size: 10pt, fill: fhnw-black)[
-          #text(weight: "bold", fill: fhnw-gray)[#l.supervisor:] #h(0.4em) #supervisor \
-          #text(weight: "bold", fill: fhnw-gray)[#l.expert:] #h(0.4em) #expert
+      // Supervision block (only if a supervisor or expert is provided)
+      #if supervision-lines.len() > 0 [
+        #v(1cm)
+        #block[
+          #set par(leading: 0.55em)
+          #text(size: 10pt, fill: fhnw-black)[#supervision-lines.join(linebreak())]
         ]
       ]
-
-      #v(1.2cm)
 
       // Location + date
+      #v(1cm)
       #text(size: 11pt, fill: fhnw-dark-gray)[
         #location, #date.display(l.date-format)
       ]
@@ -334,7 +363,7 @@
 
   if abstract != [] {
     pagebreak()
-    unnumbered-chapter[#l.abstract]
+    unnumbered-chapter(if abstract-title == none { l.abstract } else { abstract-title })
     abstract
   }
 
