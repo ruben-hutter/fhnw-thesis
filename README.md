@@ -91,9 +91,16 @@ typst init @preview/fhnw-thesis:0.1.0
   mono-font: ("Source Code Pro", "Liberation Mono"),
   body-size: 11pt,
   chapter-title-size: 24pt,
+  paragraph-indent: 1em,   // first-line indent; set to 0pt for block paragraphs
   // ...and more
 )
 ```
+
+By default, body paragraphs use a first-line indent following the standard
+scientific writing convention: every paragraph is indented except the first one
+after a heading (handled automatically by Typst), with no inter-paragraph
+spacing. Set `paragraph-indent: 0pt` to switch to the modern block-paragraph
+style with spacing between paragraphs.
 
 ### Compilation Modes
 

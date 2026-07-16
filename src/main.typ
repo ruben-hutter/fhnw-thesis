@@ -72,6 +72,11 @@
   footnote-size: 9pt,
   header-size: 9pt,
 
+  // --- Paragraph ---
+  // First-line indent for body paragraphs (every paragraph indented except the
+  // first one after a heading). Set to `0pt` for the modern block style.
+  paragraph-indent: 1em,
+
   // --- Heading sizes ---
   chapter-number-size: 60pt,
   chapter-title-size: 24pt,
@@ -169,11 +174,27 @@
   set text(font: body-font, size: body-size, lang: language)
   show raw: set text(font: mono-font, size: mono-size, lang: language)
 
+  // Body line leading. Also used as the inter-paragraph spacing so a paragraph
+  // break has the same height as a normal line (uniform vertical rhythm).
+  let lead = 0.65em * 1.5
+
   set par(
     justify: true,
-    leading: 0.65em * 1.5,
-    first-line-indent: 0pt,
+    leading: lead,
   )
+
+  // Scientific paragraph style for flowing prose (abstract, acknowledgments,
+  // chapters, appendices): first-line indent on every paragraph except the one
+  // right after a heading (Typst does this automatically). Structural pages
+  // (title page, ToC, bibliography) keep the default block style. Set
+  // `paragraph-indent: 0pt` to revert fully to the modern block style.
+  let prose(body) = {
+    set par(
+      first-line-indent: paragraph-indent,
+      spacing: if paragraph-indent > 0pt { lead } else { auto },
+    )
+    body
+  }
 
   set footnote.entry(
     separator: line(length: 30%, stroke: 0.5pt),
@@ -364,13 +385,13 @@
   if abstract != [] {
     pagebreak()
     unnumbered-chapter(if abstract-title == none { l.abstract } else { abstract-title })
-    abstract
+    prose(abstract)
   }
 
   if acknowledgments != none {
     pagebreak()
     unnumbered-chapter[#l.acknowledgments]
-    acknowledgments
+    prose(acknowledgments)
   }
 
   pagebreak()
@@ -382,8 +403,10 @@
   // ========================================================================
 
   pagebreak()
-  for chapter-content in chapters { chapter-content }
-  body
+  prose({
+    for chapter-content in chapters { chapter-content }
+    body
+  })
 
   // ========================================================================
   // BACK MATTER
@@ -403,6 +426,8 @@
       else if level <= 3 { numbering("A.1", ..nums) }
     })
     counter(heading).update(0)
-    for appendix-content in appendices { appendix-content }
+    prose({
+      for appendix-content in appendices { appendix-content }
+    })
   }
 }
