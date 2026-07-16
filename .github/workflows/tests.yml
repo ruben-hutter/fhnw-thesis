@@ -22,12 +22,12 @@ jobs:
           typst-version: "0.13"
 
       - name: Compile example thesis
-        run: typst compile src/template/thesis.typ thesis.pdf
+        run: typst compile --root . src/template/thesis.typ thesis.pdf
 
       - name: Build docs
         run: |
-          typst compile docs/manual.typ docs/manual.pdf
-          typst compile docs/thumbnail.typ src/assets/thumbnail.png --ppi 144 --pages 1
+          typst compile --root . docs/manual.typ docs/manual.pdf
+          typst compile --root . docs/thumbnail.typ src/assets/thumbnail.png --ppi 144 --pages 1
 
       - name: Upload thesis PDF
         uses: actions/upload-artifact@v4
